@@ -1,8 +1,10 @@
+const { read } = require('fs');
 const http = require('http');
 const hostname = '127.0.0.1'; 
 const port = 8081;  
 const { readFile } = require('fs').promises;
 const path = require('path');
+const { Item } = require('../models');
 
 
 const server = http.createServer(async (req, res) => {
@@ -20,10 +22,16 @@ const server = http.createServer(async (req, res) => {
             res.end()
             return
         }
+    } else if (req.url.match(/^\/items\/new/)) {
+        const formFilePath = './views/add-item.html';
+        const formFileContents = await readFile(formFilePath);
+        res.statusCode = 200; 
+        res.setHeader('Content-Type', 'text/html');
+        res.end(formFileContents);
     } else {
-    res.statusCode = 200; 
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('I have items');
+        res.statusCode = 200; 
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('I have items');
     }
 }); 
 
